@@ -1,0 +1,71 @@
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes, MessageHandler, filters
+
+TOKEN = "8701343794:AAEvX1DexX6Gt8K7HLMAFHaCz6TlXU95q5I"
+CHANNEL_ID = "-1003181034907"
+
+# Активные чаты и сохранение сообщений
+active_chats = set()
+pending_messages = {}  # chat_id -> текст
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id = update.effective_chat.id
+    active_chats.add(chat_id)
+    await update.message.reply_text(
+        "Привет! Напиши сообщение, и выбери как его отправить анонимно."
+    )
+
+async def text_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat = update.effective_chat
+    if chat.type != "private" or chat.id not in active_chats:
+        return
+
+    text = update.message.text
+    if not text:
+        return
+
+    # сохраняем сообщение
+    pending_messages[chat.id] = text
+
+    # создаём две кнопки
+    keyboard = [
+        [
+            InlineKeyboardButton("Отправить спокойно", callback_data="send_normal"),
+            InlineKeyboardButton("Послать нахуй и отправить", callback_data="send_swag")
+        ]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    await update.message.reply_text(
+        "Выберите вариант отправки:", reply_markup=reply_markup
+    )
+
+async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    await query.answer()
+    chat_id = query.message.chat.id
+
+    text = pending_messages.get(chat_id)
+    if not text:
+        await query.edit_message_text("Сообщение не найдено или уже отправлено ❌")
+        return
+
+    # проверяем, какая кнопка
+    if query.data == "send_swag":
+        text += "\nпошел нахуй @McTrakser"
+
+    try:
+        await context.bot.send_message(chat_id=CHANNEL_ID, text=f"📩 Анон: {text}")
+        await query.edit_message_text("Сообщение отправлено анонимно ✅")
+        del pending_messages[chat_id]
+    except Exception as e:
+        await query.edit_message_text("Ошибка при отправке ❌")
+        print("Forward error:", e)
+
+if __name__ == "__main__":
+    app = ApplicationBuilder().token(TOKEN).build()
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, text_message))
+    app.add_handler(CallbackQueryHandler(button, pattern="send_.*"))
+    print("Бот запущен...")
+    app.run_polling()
