@@ -10,6 +10,7 @@ export interface IStorage {
   getMessages(): Promise<Message[]>;
   getMessageById(id: number): Promise<Message | undefined>;
   createMessage(message: InsertMessage): Promise<Message>;
+  updateMessageFileId(id: number, fileId: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -25,6 +26,10 @@ export class DatabaseStorage implements IStorage {
   async createMessage(insertMessage: InsertMessage): Promise<Message> {
     const [message] = await db.insert(messages).values(insertMessage).returning();
     return message;
+  }
+
+  async updateMessageFileId(id: number, fileId: string): Promise<void> {
+    await db.update(messages).set({ mediaFileId: fileId }).where(eq(messages.id, id));
   }
 }
 

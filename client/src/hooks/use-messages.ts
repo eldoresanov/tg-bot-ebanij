@@ -13,9 +13,6 @@ export function useMessages() {
       const res = await fetch(api.messages.list.path, { credentials: "include" });
       if (!res.ok) throw new Error("Failed to fetch messages");
       const data = await res.json();
-      
-      // Bypassing strict parsing to safely handle JSON date strings without crashing, 
-      // since the schema might expect Date objects while JSON provides ISO strings.
       return data as Message[];
     },
   });
@@ -27,33 +24,50 @@ export function useSendMessage() {
 
   return useMutation({
     mutationFn: async (data: InsertMessage) => {
-      // Validate locally before sending
       const validated = api.messages.send.input.parse(data);
-      
       const res = await fetch(api.messages.send.path, {
         method: api.messages.send.method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(validated),
         credentials: "include",
       });
-
       if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(errorText || "Не удалось отправить сообщение");
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.message || "Не удалось отправить сообщение");
       }
-
       return (await res.json()) as Message;
     },
     onSuccess: () => {
-      // Invalidate the list so history is up-to-date
       queryClient.invalidateQueries({ queryKey: [api.messages.list.path] });
     },
     onError: (error) => {
-      toast({
-        title: "Ошибка",
-        description: error.message,
-        variant: "destructive",
+      toast({ title: "Ошибка", description: error.message, variant: "destructive" });
+    },
+  });
+}
+
+export function useSendMedia() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: async (formData: FormData) => {
+      const res = await fetch("/api/messages/upload", {
+        method: "POST",
+        body: formData,
+        credentials: "include",
       });
-    }
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.message || "Не удалось отправить медиа");
+      }
+      return (await res.json()) as Message;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [api.messages.list.path] });
+    },
+    onError: (error) => {
+      toast({ title: "Ошибка", description: error.message, variant: "destructive" });
+    },
   });
 }
