@@ -302,6 +302,41 @@ export async function registerRoutes(
   app.post("/api/telegram/webhook", async (req, res) => {
     try {
       const update = req.body;
+
+      // Handle /start command
+      if (update?.message?.text?.startsWith("/start")) {
+        const chatId = update.message.chat.id;
+        const webAppUrl =
+          process.env.WEB_APP_URL ||
+          (process.env.REPLIT_DOMAINS
+            ? `https://${process.env.REPLIT_DOMAINS.split(",")[0]}`
+            : null);
+
+        const body: Record<string, unknown> = {
+          chat_id: chatId,
+          text:
+            "Привет!\n\nЗдесь ты можешь отправить анонимное сообщение в канал.\n\nНажми кнопку ниже, чтобы открыть мини-приложение:",
+        };
+
+        if (webAppUrl) {
+          body.reply_markup = JSON.stringify({
+            inline_keyboard: [
+              [{ text: "Открыть мини-приложение", url: webAppUrl }],
+            ],
+          });
+        }
+
+        await fetch(
+          `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+          }
+        );
+        return res.sendStatus(200);
+      }
+
       if (!update?.callback_query) return res.sendStatus(200);
 
       const { callback_query } = update;
