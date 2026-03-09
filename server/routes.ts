@@ -184,12 +184,9 @@ export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
-  // Auto-register Telegram webhook on deployed Replit domains
-  const replitDomains = process.env.REPLIT_DOMAINS;
-  if (replitDomains) {
-    const primaryDomain = replitDomains.split(",")[0].trim();
-    registerTelegramWebhook(`https://${primaryDomain}/api/telegram/webhook`);
-  }
+  // Always register webhook to production URL so dev restarts don't override it
+  const PRODUCTION_WEBHOOK = "https://telegram-bot-helper--McTrakser.replit.app/api/telegram/webhook";
+  registerTelegramWebhook(PRODUCTION_WEBHOOK);
 
   app.get("/api/telegram/setup-webhook", async (req, res) => {
     const host = req.headers.host || "";
