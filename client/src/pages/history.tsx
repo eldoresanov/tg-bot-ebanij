@@ -50,7 +50,7 @@ export default function History() {
           transition={{ delay: 0.2 }}
           className="text-muted-foreground ml-16"
         >
-          Всё, что было отправлено в канал, собрано здесь.
+          Все сообщения, отправленные на модерацию, собраны здесь.
         </motion.p>
       </div>
 

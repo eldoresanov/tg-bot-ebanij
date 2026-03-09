@@ -21,9 +21,8 @@ export default function Home() {
         onSuccess: () => {
           setContent("");
           toast({
-            title: isSwag ? "Агрессивно отправлено! 💥" : "Успешно отправлено! ✉️",
-            description: "Ваше анонимное сообщение успешно доставлено.",
-            className: isSwag ? "bg-gradient-to-r from-pink-500 to-rose-500 text-white border-none" : "",
+            title: "Отправлено на модерацию",
+            description: "Ваше сообщение получено и ожидает проверки перед публикацией.",
           });
         },
       }
