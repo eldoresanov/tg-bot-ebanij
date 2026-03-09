@@ -58,10 +58,58 @@ async function sendToMainChannel(text: string) {
   }
 }
 
+async function registerTelegramWebhook(webhookUrl: string) {
+  try {
+    const current = await fetch(
+      `https://api.telegram.org/bot${TELEGRAM_TOKEN}/getWebhookInfo`
+    ).then((r) => r.json());
+
+    if (current?.result?.url === webhookUrl) {
+      console.log("[telegram] Webhook already set to", webhookUrl);
+      return;
+    }
+
+    const resp = await fetch(
+      `https://api.telegram.org/bot${TELEGRAM_TOKEN}/setWebhook`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: webhookUrl }),
+      }
+    );
+    const result = await resp.json();
+    if (result.ok) {
+      console.log("[telegram] Webhook registered:", webhookUrl);
+    } else {
+      console.error("[telegram] Failed to register webhook:", result);
+    }
+  } catch (e) {
+    console.error("[telegram] Error registering webhook:", e);
+  }
+}
+
 export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
+  // Auto-register Telegram webhook when running on a deployed Replit domain
+  const replitDomains = process.env.REPLIT_DOMAINS;
+  if (replitDomains) {
+    const primaryDomain = replitDomains.split(",")[0].trim();
+    const webhookUrl = `https://${primaryDomain}/api/telegram/webhook`;
+    registerTelegramWebhook(webhookUrl);
+  }
+
+  // Manual setup endpoint: GET /api/telegram/setup-webhook
+  // Visit this URL once if the webhook wasn't auto-registered
+  app.get("/api/telegram/setup-webhook", async (req, res) => {
+    const host = req.headers.host || "";
+    const proto = req.headers["x-forwarded-proto"] || "https";
+    const webhookUrl = `${proto}://${host}/api/telegram/webhook`;
+    await registerTelegramWebhook(webhookUrl);
+    res.json({ webhookUrl, message: "Webhook registration attempted — check server logs" });
+  });
+
   app.get(api.messages.list.path, async (req, res) => {
     try {
       const msgs = await storage.getMessages();
