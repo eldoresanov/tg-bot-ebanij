@@ -2,7 +2,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes, MessageHandler, filters
 import os
 
-TOKEN = "8265225057:AAHrORerpEToxN9mx07YvcPhzO8HEP8usv0"
+TOKEN = "8701343794:AAEvX1DexX6Gt8K7HLMAFHaCz6TlXU95q5I"
 MAIN_CHANNEL_ID = "-1003181034907"
 MOD_CHANNEL_ID = "-1003278302331"
 ADMIN_ID = 6437612855

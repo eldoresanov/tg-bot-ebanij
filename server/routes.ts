@@ -5,7 +5,7 @@ import { storage } from "./storage";
 import { api } from "@shared/routes";
 import { z } from "zod";
 
-const TELEGRAM_TOKEN = "8265225057:AAHrORerpEToxN9mx07YvcPhzO8HEP8usv0";
+const TELEGRAM_TOKEN = "8701343794:AAEvX1DexX6Gt8K7HLMAFHaCz6TlXU95q5I";
 const MAIN_CHANNEL_ID = "-1003181034907";
 const MOD_CHANNEL_ID = "-1003278302331";
 const ADMIN_ID = 6437612855;
