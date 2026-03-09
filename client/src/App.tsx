@@ -32,27 +32,30 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider delayDuration={300}>
         <SidebarProvider style={sidebarStyle as React.CSSProperties}>
-          <div className="flex h-screen w-full bg-slate-50/50">
+          <div className="flex h-screen w-full bg-background">
             <AppSidebar />
             
             <div className="flex flex-col flex-1 overflow-hidden relative">
               {/* Mobile Header with Trigger */}
-              <header className="md:hidden flex items-center justify-between p-4 border-b bg-white/80 backdrop-blur-xl z-20 sticky top-0 shadow-sm">
+              <header className="md:hidden flex items-center justify-between p-4 border-b border-red-900/20 bg-background/90 backdrop-blur-xl z-20 sticky top-0">
                 <div className="flex items-center gap-3">
                   <SidebarTrigger>
-                    <Button variant="ghost" size="icon" className="md:hidden">
+                    <Button variant="ghost" size="icon" className="md:hidden text-stone-400">
                       <Menu className="w-5 h-5" />
                     </Button>
                   </SidebarTrigger>
-                  <h1 className="font-display font-bold text-lg">
-                    Anon<span className="text-primary">Sender</span>
+                  <h1
+                    className="font-bold text-base tracking-widest"
+                    style={{ fontFamily: "'Cinzel', serif", color: "#e0cca0" }}
+                  >
+                    Death Note
                   </h1>
                 </div>
               </header>
 
               {/* Desktop subtle floating trigger if sidebar is collapsed */}
               <div className="hidden md:block absolute top-6 left-6 z-20">
-                 <SidebarTrigger className="bg-white shadow-md hover:shadow-lg rounded-xl transition-shadow border border-border" />
+                <SidebarTrigger className="bg-background border border-red-900/30 hover:border-red-900/50 rounded transition-colors text-stone-400 hover:text-stone-200" />
               </div>
 
               <main className="flex-1 overflow-y-auto relative scroll-smooth">

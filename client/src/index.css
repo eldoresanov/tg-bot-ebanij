@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Onest:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=IM+Fell+English:ital@0;1&family=Onest:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,52 +6,48 @@
 
 @layer base {
   :root {
-    --font-display: 'Nunito', sans-serif;
+    --font-display: 'Cinzel', serif;
     --font-sans: 'Onest', sans-serif;
+    --font-body: 'IM Fell English', serif;
 
-    /* Soft, playful but minimal base */
-    --background: 250 25% 98%;
-    --foreground: 250 40% 12%;
+    --background: 0 10% 5%;
+    --foreground: 36 40% 88%;
 
-    /* Premium White Cards with slight transparency for glass effects */
-    --card: 0 0% 100%;
-    --card-foreground: 250 40% 12%;
-    
-    --popover: 0 0% 100%;
-    --popover-foreground: 250 40% 12%;
+    --card: 0 8% 7%;
+    --card-foreground: 36 40% 88%;
 
-    /* Vibrant Indigo Primary */
-    --primary: 258 85% 62%;
-    --primary-foreground: 0 0% 100%;
+    --popover: 0 8% 7%;
+    --popover-foreground: 36 40% 88%;
 
-    /* Playful secondary */
-    --secondary: 250 15% 94%;
-    --secondary-foreground: 258 85% 62%;
+    --primary: 0 75% 42%;
+    --primary-foreground: 36 40% 92%;
 
-    --muted: 250 15% 94%;
-    --muted-foreground: 250 15% 45%;
+    --secondary: 0 8% 12%;
+    --secondary-foreground: 36 30% 75%;
 
-    /* Swag Accent - Hot Pink/Orange */
-    --accent: 335 85% 58%;
-    --accent-foreground: 0 0% 100%;
+    --muted: 0 8% 12%;
+    --muted-foreground: 36 15% 50%;
 
-    --destructive: 0 84% 60%;
+    --accent: 0 65% 30%;
+    --accent-foreground: 36 40% 92%;
+
+    --destructive: 0 84% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 250 20% 90%;
-    --input: 250 20% 90%;
-    --ring: 258 85% 62%;
+    --border: 0 15% 18%;
+    --input: 0 10% 14%;
+    --ring: 0 75% 42%;
 
-    --radius: 1.25rem;
-    
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 250 40% 12%;
-    --sidebar-primary: 258 85% 62%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 250 15% 94%;
-    --sidebar-accent-foreground: 258 85% 62%;
-    --sidebar-border: 250 20% 90%;
-    --sidebar-ring: 258 85% 62%;
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 10% 4%;
+    --sidebar-foreground: 36 40% 88%;
+    --sidebar-primary: 0 75% 42%;
+    --sidebar-primary-foreground: 36 40% 92%;
+    --sidebar-accent: 0 8% 10%;
+    --sidebar-accent-foreground: 36 30% 75%;
+    --sidebar-border: 0 15% 14%;
+    --sidebar-ring: 0 75% 42%;
   }
 
   * {
@@ -59,8 +55,16 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary;
+    @apply bg-background text-foreground antialiased;
     font-family: var(--font-sans);
+    background-image:
+      repeating-linear-gradient(
+        transparent,
+        transparent 31px,
+        hsl(0 15% 15% / 0.25) 31px,
+        hsl(0 15% 15% / 0.25) 32px
+      );
+    background-size: 100% 32px;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -73,19 +77,45 @@
   .text-balance {
     text-wrap: balance;
   }
-  
-  /* Custom scrollbar for a cleaner look */
+
+  .font-body {
+    font-family: var(--font-body);
+  }
+
+  .notebook-lines {
+    background-image:
+      repeating-linear-gradient(
+        transparent,
+        transparent 31px,
+        hsl(0 15% 20% / 0.3) 31px,
+        hsl(0 15% 20% / 0.3) 32px
+      );
+    background-size: 100% 32px;
+  }
+
+  .red-glow {
+    text-shadow: 0 0 20px hsl(0 75% 42% / 0.6), 0 0 40px hsl(0 75% 42% / 0.3);
+  }
+
+  .book-shadow {
+    box-shadow:
+      -8px 0 20px rgba(0,0,0,0.8),
+      8px 0 20px rgba(0,0,0,0.4),
+      0 20px 60px rgba(0,0,0,0.9),
+      inset -3px 0 8px rgba(0,0,0,0.5);
+  }
+
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
   }
   ::-webkit-scrollbar-track {
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-border rounded-full;
+    @apply bg-primary/30 rounded-full;
   }
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-muted-foreground/30;
+    @apply bg-primary/50;
   }
 }
