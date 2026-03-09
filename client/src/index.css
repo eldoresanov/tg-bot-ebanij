@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=IM+Fell+English:ital@0;1&family=Onest:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Share+Tech+Mono&family=Onest:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,48 +6,48 @@
 
 @layer base {
   :root {
-    --font-display: 'Cinzel', serif;
+    --font-display: 'Orbitron', sans-serif;
+    --font-mono: 'Share Tech Mono', monospace;
     --font-sans: 'Onest', sans-serif;
-    --font-body: 'IM Fell English', serif;
 
-    --background: 0 10% 5%;
-    --foreground: 36 40% 88%;
+    --background: 272 45% 4%;
+    --foreground: 195 60% 82%;
 
-    --card: 0 8% 7%;
-    --card-foreground: 36 40% 88%;
+    --card: 272 35% 6%;
+    --card-foreground: 195 60% 82%;
 
-    --popover: 0 8% 7%;
-    --popover-foreground: 36 40% 88%;
+    --popover: 272 35% 6%;
+    --popover-foreground: 195 60% 82%;
 
-    --primary: 0 75% 42%;
-    --primary-foreground: 36 40% 92%;
+    --primary: 272 80% 58%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 8% 12%;
-    --secondary-foreground: 36 30% 75%;
+    --secondary: 272 30% 10%;
+    --secondary-foreground: 195 60% 72%;
 
-    --muted: 0 8% 12%;
-    --muted-foreground: 36 15% 50%;
+    --muted: 272 25% 9%;
+    --muted-foreground: 272 20% 45%;
 
-    --accent: 0 65% 30%;
-    --accent-foreground: 36 40% 92%;
+    --accent: 145 100% 42%;
+    --accent-foreground: 272 45% 4%;
 
-    --destructive: 0 84% 50%;
+    --destructive: 0 84% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 15% 18%;
-    --input: 0 10% 14%;
-    --ring: 0 75% 42%;
+    --border: 272 40% 16%;
+    --input: 272 30% 10%;
+    --ring: 272 80% 58%;
 
-    --radius: 0.5rem;
+    --radius: 0.25rem;
 
-    --sidebar-background: 0 10% 4%;
-    --sidebar-foreground: 36 40% 88%;
-    --sidebar-primary: 0 75% 42%;
-    --sidebar-primary-foreground: 36 40% 92%;
-    --sidebar-accent: 0 8% 10%;
-    --sidebar-accent-foreground: 36 30% 75%;
-    --sidebar-border: 0 15% 14%;
-    --sidebar-ring: 0 75% 42%;
+    --sidebar-background: 272 50% 3%;
+    --sidebar-foreground: 195 60% 72%;
+    --sidebar-primary: 272 80% 58%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 272 30% 8%;
+    --sidebar-accent-foreground: 145 100% 42%;
+    --sidebar-border: 272 40% 12%;
+    --sidebar-ring: 272 80% 58%;
   }
 
   * {
@@ -57,14 +57,8 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-sans);
-    background-image:
-      repeating-linear-gradient(
-        transparent,
-        transparent 31px,
-        hsl(0 15% 15% / 0.25) 31px,
-        hsl(0 15% 15% / 0.25) 32px
-      );
-    background-size: 100% 32px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='104'%3E%3Cpolygon points='30,2 58,18 58,50 30,66 2,50 2,18' fill='none' stroke='rgba%28120%2C40%2C200%2C0.08%29' stroke-width='0.8'/%3E%3Cpolygon points='30,54 58,70 58,102 30,118 2,102 2,70' fill='none' stroke='rgba%28120%2C40%2C200%2C0.08%29' stroke-width='0.8'/%3E%3Cpolygon points='-30,2 -2,18 -2,50 -30,66 -58,50 -58,18' fill='none' stroke='rgba%28120%2C40%2C200%2C0.08%29' stroke-width='0.8'/%3E%3C/svg%3E");
+    background-size: 60px 104px;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -78,44 +72,63 @@
     text-wrap: balance;
   }
 
-  .font-body {
-    font-family: var(--font-body);
+  .font-mono-nerv {
+    font-family: var(--font-mono);
   }
 
-  .notebook-lines {
-    background-image:
-      repeating-linear-gradient(
-        transparent,
-        transparent 31px,
-        hsl(0 15% 20% / 0.3) 31px,
-        hsl(0 15% 20% / 0.3) 32px
-      );
-    background-size: 100% 32px;
+  .font-display-nerv {
+    font-family: var(--font-display);
   }
 
-  .red-glow {
-    text-shadow: 0 0 20px hsl(0 75% 42% / 0.6), 0 0 40px hsl(0 75% 42% / 0.3);
+  .green-glow {
+    text-shadow: 0 0 10px rgba(0, 255, 100, 0.8), 0 0 30px rgba(0, 255, 100, 0.4);
   }
 
-  .book-shadow {
-    box-shadow:
-      -8px 0 20px rgba(0,0,0,0.8),
-      8px 0 20px rgba(0,0,0,0.4),
-      0 20px 60px rgba(0,0,0,0.9),
-      inset -3px 0 8px rgba(0,0,0,0.5);
+  .purple-glow {
+    box-shadow: 0 0 20px rgba(120, 40, 200, 0.4), 0 0 60px rgba(120, 40, 200, 0.15), inset 0 0 30px rgba(120, 40, 200, 0.05);
+  }
+
+  .nerv-border {
+    border: 1px solid rgba(120, 40, 200, 0.35);
+    box-shadow: 0 0 0 1px rgba(120, 40, 200, 0.1), inset 0 0 20px rgba(120, 40, 200, 0.03);
+  }
+
+  .warning-stripe {
+    background-image: repeating-linear-gradient(
+      45deg,
+      rgba(255, 140, 0, 0.07) 0px,
+      rgba(255, 140, 0, 0.07) 8px,
+      transparent 8px,
+      transparent 16px
+    );
+  }
+
+  .scanline::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.03) 2px,
+      rgba(0, 0, 0, 0.03) 4px
+    );
+    pointer-events: none;
   }
 
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 4px;
+    height: 4px;
   }
   ::-webkit-scrollbar-track {
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-primary/30 rounded-full;
+    background: rgba(120, 40, 200, 0.4);
+    border-radius: 2px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-primary/50;
+    background: rgba(120, 40, 200, 0.7);
   }
 }
