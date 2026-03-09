@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Share+Tech+Mono&family=Onest:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&family=Onest:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,48 +6,48 @@
 
 @layer base {
   :root {
-    --font-display: 'Orbitron', sans-serif;
+    --font-display: 'VT323', monospace;
     --font-mono: 'Share Tech Mono', monospace;
     --font-sans: 'Onest', sans-serif;
 
-    --background: 272 45% 4%;
-    --foreground: 195 60% 82%;
+    --background: 210 30% 5%;
+    --foreground: 195 25% 68%;
 
-    --card: 272 35% 6%;
-    --card-foreground: 195 60% 82%;
+    --card: 210 28% 7%;
+    --card-foreground: 195 25% 68%;
 
-    --popover: 272 35% 6%;
-    --popover-foreground: 195 60% 82%;
+    --popover: 210 28% 7%;
+    --popover-foreground: 195 25% 68%;
 
-    --primary: 272 80% 58%;
+    --primary: 185 55% 38%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 272 30% 10%;
-    --secondary-foreground: 195 60% 72%;
+    --secondary: 210 25% 10%;
+    --secondary-foreground: 195 20% 55%;
 
-    --muted: 272 25% 9%;
-    --muted-foreground: 272 20% 45%;
+    --muted: 210 22% 9%;
+    --muted-foreground: 210 15% 38%;
 
-    --accent: 145 100% 42%;
-    --accent-foreground: 272 45% 4%;
+    --accent: 270 20% 62%;
+    --accent-foreground: 210 30% 5%;
 
-    --destructive: 0 84% 55%;
+    --destructive: 0 60% 45%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 272 40% 16%;
-    --input: 272 30% 10%;
-    --ring: 272 80% 58%;
+    --border: 205 30% 14%;
+    --input: 210 25% 10%;
+    --ring: 185 55% 38%;
 
-    --radius: 0.25rem;
+    --radius: 0rem;
 
-    --sidebar-background: 272 50% 3%;
-    --sidebar-foreground: 195 60% 72%;
-    --sidebar-primary: 272 80% 58%;
+    --sidebar-background: 210 35% 4%;
+    --sidebar-foreground: 195 25% 58%;
+    --sidebar-primary: 185 55% 38%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 272 30% 8%;
-    --sidebar-accent-foreground: 145 100% 42%;
-    --sidebar-border: 272 40% 12%;
-    --sidebar-ring: 272 80% 58%;
+    --sidebar-accent: 210 25% 8%;
+    --sidebar-accent-foreground: 270 20% 62%;
+    --sidebar-border: 205 30% 10%;
+    --sidebar-ring: 185 55% 38%;
   }
 
   * {
@@ -57,13 +57,29 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-sans);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='104'%3E%3Cpolygon points='30,2 58,18 58,50 30,66 2,50 2,18' fill='none' stroke='rgba%28120%2C40%2C200%2C0.08%29' stroke-width='0.8'/%3E%3Cpolygon points='30,54 58,70 58,102 30,118 2,102 2,70' fill='none' stroke='rgba%28120%2C40%2C200%2C0.08%29' stroke-width='0.8'/%3E%3Cpolygon points='-30,2 -2,18 -2,50 -30,66 -58,50 -58,18' fill='none' stroke='rgba%28120%2C40%2C200%2C0.08%29' stroke-width='0.8'/%3E%3C/svg%3E");
-    background-size: 60px 104px;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M0 40 L40 0 L80 40 L40 80 Z' fill='none' stroke='rgba%2820%2C80%2C100%2C0.04%29' stroke-width='0.5'/%3E%3Ccircle cx='40' cy='40' r='2' fill='rgba%2820%2C80%2C100%2C0.04%29'/%3E%3Ccircle cx='0' cy='0' r='1.5' fill='rgba%2820%2C80%2C100%2C0.04%29'/%3E%3Ccircle cx='80' cy='0' r='1.5' fill='rgba%2820%2C80%2C100%2C0.04%29'/%3E%3Ccircle cx='0' cy='80' r='1.5' fill='rgba%2820%2C80%2C100%2C0.04%29'/%3E%3Ccircle cx='80' cy='80' r='1.5' fill='rgba%2820%2C80%2C100%2C0.04%29'/%3E%3Cline x1='0' y1='40' x2='80' y2='40' stroke='rgba%2820%2C80%2C100%2C0.025%29' stroke-width='0.5'/%3E%3Cline x1='40' y1='0' x2='40' y2='80' stroke='rgba%2820%2C80%2C100%2C0.025%29' stroke-width='0.5'/%3E%3C/svg%3E");
+    background-size: 80px 80px;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.07) 2px,
+      rgba(0, 0, 0, 0.07) 4px
+    );
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    @apply font-bold tracking-tight;
+    @apply font-normal tracking-wide;
   }
 }
 
@@ -72,63 +88,57 @@
     text-wrap: balance;
   }
 
-  .font-mono-nerv {
-    font-family: var(--font-mono);
+  .font-vt {
+    font-family: 'VT323', monospace;
   }
 
-  .font-display-nerv {
-    font-family: var(--font-display);
+  .font-mono-lain {
+    font-family: 'Share Tech Mono', monospace;
   }
 
-  .green-glow {
-    text-shadow: 0 0 10px rgba(0, 255, 100, 0.8), 0 0 30px rgba(0, 255, 100, 0.4);
+  .crt-glow {
+    text-shadow: 0 0 8px rgba(80, 200, 200, 0.6), 0 0 20px rgba(80, 200, 200, 0.2);
   }
 
-  .purple-glow {
-    box-shadow: 0 0 20px rgba(120, 40, 200, 0.4), 0 0 60px rgba(120, 40, 200, 0.15), inset 0 0 30px rgba(120, 40, 200, 0.05);
+  .lain-glow {
+    box-shadow:
+      0 0 0 1px rgba(40, 140, 150, 0.2),
+      0 0 30px rgba(40, 140, 150, 0.06),
+      inset 0 0 30px rgba(40, 140, 150, 0.03);
   }
 
-  .nerv-border {
-    border: 1px solid rgba(120, 40, 200, 0.35);
-    box-shadow: 0 0 0 1px rgba(120, 40, 200, 0.1), inset 0 0 20px rgba(120, 40, 200, 0.03);
+  .static-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
   }
 
-  .warning-stripe {
-    background-image: repeating-linear-gradient(
-      45deg,
-      rgba(255, 140, 0, 0.07) 0px,
-      rgba(255, 140, 0, 0.07) 8px,
-      transparent 8px,
-      transparent 16px
-    );
+  .lain-border {
+    border: 1px solid rgba(40, 140, 150, 0.2);
   }
 
-  .scanline::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0, 0, 0, 0.03) 2px,
-      rgba(0, 0, 0, 0.03) 4px
-    );
-    pointer-events: none;
+  .glitch {
+    animation: glitch 8s infinite;
+  }
+
+  @keyframes glitch {
+    0%, 92%, 100% { transform: translate(0); opacity: 1; }
+    93% { transform: translate(-2px, 1px); opacity: 0.85; }
+    94% { transform: translate(2px, -1px); opacity: 0.9; }
+    95% { transform: translate(0); opacity: 1; }
+    96% { transform: translate(-1px, 2px); opacity: 0.8; }
+    97% { transform: translate(0); opacity: 1; }
   }
 
   ::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
+    width: 3px;
+    height: 3px;
   }
   ::-webkit-scrollbar-track {
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(120, 40, 200, 0.4);
-    border-radius: 2px;
+    background: rgba(40, 140, 150, 0.3);
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(120, 40, 200, 0.7);
+    background: rgba(40, 140, 150, 0.6);
   }
 }

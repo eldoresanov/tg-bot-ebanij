@@ -37,29 +37,34 @@ function App() {
             
             <div className="flex flex-col flex-1 overflow-hidden relative">
               {/* Mobile Header with Trigger */}
-              <header className="md:hidden flex items-center justify-between px-4 py-3 border-b border-purple-900/25 bg-background/95 backdrop-blur-xl z-20 sticky top-0">
+              <header className="md:hidden flex items-center justify-between px-4 py-3 border-b border-teal-900/15 bg-background/95 backdrop-blur-xl z-20 sticky top-0">
                 <div className="flex items-center gap-3">
                   <SidebarTrigger>
-                    <Button variant="ghost" size="icon" className="md:hidden text-purple-500/60 hover:text-purple-300">
-                      <Menu className="w-5 h-5" />
+                    <Button variant="ghost" size="icon" className="md:hidden text-teal-700/40 hover:text-teal-400/60">
+                      <Menu className="w-4 h-4" />
                     </Button>
                   </SidebarTrigger>
                   <h1
-                    className="font-black text-sm tracking-[0.25em] text-white/80"
-                    style={{ fontFamily: "'Orbitron', sans-serif", textShadow: "0 0 12px rgba(120,40,255,0.5)" }}
+                    className="leading-none glitch"
+                    style={{
+                      fontFamily: "'VT323', monospace",
+                      fontSize: "1.4rem",
+                      color: "rgba(100,190,200,0.6)",
+                      textShadow: "0 0 10px rgba(60,170,180,0.3)",
+                      letterSpacing: "0.1em",
+                    }}
                   >
-                    NERV
+                    THE WIRED
                   </h1>
                 </div>
-                <span className="text-[9px] text-purple-700/40 tracking-[0.3em] uppercase"
-                  style={{ fontFamily: "'Share Tech Mono', monospace" }}>
-                  EVA-01
+                <span className="text-[9px] text-teal-800/30 tracking-widest" style={{ fontFamily: "'Share Tech Mono', monospace" }}>
+                  PRESENT TIME
                 </span>
               </header>
 
               {/* Desktop subtle floating trigger if sidebar is collapsed */}
               <div className="hidden md:block absolute top-6 left-6 z-20">
-                <SidebarTrigger className="bg-background border border-purple-800/30 hover:border-purple-600/50 rounded-none transition-colors text-purple-600/50 hover:text-purple-300" />
+                <SidebarTrigger className="bg-background border border-teal-900/20 hover:border-teal-700/30 rounded-none transition-colors text-teal-700/40 hover:text-teal-500/60" />
               </div>
 
               <main className="flex-1 overflow-y-auto relative scroll-smooth">
