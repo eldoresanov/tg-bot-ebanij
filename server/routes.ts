@@ -135,7 +135,7 @@ async function sendToMainChannel(
       body: JSON.stringify({
         chat_id: MAIN_CHANNEL_ID,
         [fieldName]: mediaFileId,
-        caption: `📩 Анон:\n${text}`,
+        caption: `⬡ NERV // АНОНИМ\n${text}`,
       }),
     });
   } else {
@@ -144,7 +144,7 @@ async function sendToMainChannel(
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         chat_id: MAIN_CHANNEL_ID,
-        text: `📩 Анон:\n${text}`,
+        text: `⬡ NERV // АНОНИМ\n${text}`,
       }),
     });
   }
@@ -214,7 +214,7 @@ export async function registerRoutes(
       const input = api.messages.send.input.parse(req.body);
       const msg = await storage.createMessage(input);
 
-      let caption = `📩 Анон:\n\n${input.content}`;
+      let caption = `⬡ NERV // АНОНИМ\n\n${input.content}`;
       if (input.isSwag) caption += "\nпошел нахуй @McTrakser";
 
       try {
@@ -265,7 +265,7 @@ export async function registerRoutes(
           mediaFileId: null,
         });
 
-        let caption = `📩 Анон:\n\n${content}`;
+        let caption = `⬡ NERV // АНОНИМ\n\n${content}`;
         if (isSwag) caption += "\nпошел нахуй @McTrakser";
 
         try {

@@ -85,7 +85,7 @@ async def send_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await context.bot.send_photo(
                 chat_id=MOD_CHANNEL_ID,
                 photo=msg.photo[-1].file_id,
-                caption=f"Анон:\n\n{text}",
+                caption=f"⬡ NERV // АНОНИМ\n\n{text}",
                 reply_markup=InlineKeyboardMarkup(keyboard_mod)
             )
             mod_messages[chat_id] = {"type": "photo", "file_id": msg.photo[-1].file_id, "text": text}
@@ -94,7 +94,7 @@ async def send_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await context.bot.send_video(
                 chat_id=MOD_CHANNEL_ID,
                 video=msg.video.file_id,
-                caption=f"Анон:\n\n{text}",
+                caption=f"⬡ NERV // АНОНИМ\n\n{text}",
                 reply_markup=InlineKeyboardMarkup(keyboard_mod)
             )
             mod_messages[chat_id] = {"type": "video", "file_id": msg.video.file_id, "text": text}
@@ -103,7 +103,7 @@ async def send_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await context.bot.send_animation(
                 chat_id=MOD_CHANNEL_ID,
                 animation=msg.animation.file_id,
-                caption=f"Анон:\n\n{text}",
+                caption=f"⬡ NERV // АНОНИМ\n\n{text}",
                 reply_markup=InlineKeyboardMarkup(keyboard_mod)
             )
             mod_messages[chat_id] = {"type": "animation", "file_id": msg.animation.file_id, "text": text}
@@ -111,7 +111,7 @@ async def send_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
         else:
             await context.bot.send_message(
                 chat_id=MOD_CHANNEL_ID,
-                text=f"Анон:\n\n{text}",
+                text=f"⬡ NERV // АНОНИМ\n\n{text}",
                 reply_markup=InlineKeyboardMarkup(keyboard_mod)
             )
             mod_messages[chat_id] = {"type": "text", "text": text}
@@ -148,13 +148,13 @@ async def moderation_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE)
     if action == "approve":
         try:
             if msg_data["type"] == "photo":
-                await context.bot.send_photo(chat_id=MAIN_CHANNEL_ID, photo=msg_data["file_id"], caption=f"Анон:\n{text}")
+                await context.bot.send_photo(chat_id=MAIN_CHANNEL_ID, photo=msg_data["file_id"], caption=f"⬡ NERV // АНОНИМ\n{text}")
             elif msg_data["type"] == "video":
-                await context.bot.send_video(chat_id=MAIN_CHANNEL_ID, video=msg_data["file_id"], caption=f"Анон:\n{text}")
+                await context.bot.send_video(chat_id=MAIN_CHANNEL_ID, video=msg_data["file_id"], caption=f"⬡ NERV // АНОНИМ\n{text}")
             elif msg_data["type"] == "animation":
-                await context.bot.send_animation(chat_id=MAIN_CHANNEL_ID, animation=msg_data["file_id"], caption=f"Анон:\n{text}")
+                await context.bot.send_animation(chat_id=MAIN_CHANNEL_ID, animation=msg_data["file_id"], caption=f"⬡ NERV // АНОНИМ\n{text}")
             else:
-                await context.bot.send_message(chat_id=MAIN_CHANNEL_ID, text=f"Анон:\n{text}")
+                await context.bot.send_message(chat_id=MAIN_CHANNEL_ID, text=f"⬡ NERV // АНОНИМ\n{text}")
         except Exception as e:
             print("Ошибка отправки в основной канал:", e)
         await query.edit_message_text("Сообщение одобрено и отправлено")
