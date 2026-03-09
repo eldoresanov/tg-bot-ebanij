@@ -8,7 +8,7 @@ MOD_CHANNEL_ID = "-1003278302331"
 ADMIN_ID = 6437612855
 
 # URL веб-приложения — замени на свой задеплоенный адрес
-WEB_APP_URL = os.environ.get("WEB_APP_URL", "https://your-app.replit.app")
+WEB_APP_URL = os.environ.get("WEB_APP_URL", "https://telegram-bot-helper--McTrakser.replit.app")
 
 active_chats = set()
 pending_messages = {}

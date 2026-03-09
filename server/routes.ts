@@ -308,9 +308,7 @@ export async function registerRoutes(
         const chatId = update.message.chat.id;
         const webAppUrl =
           process.env.WEB_APP_URL ||
-          (process.env.REPLIT_DOMAINS
-            ? `https://${process.env.REPLIT_DOMAINS.split(",")[0]}`
-            : null);
+          "https://telegram-bot-helper--McTrakser.replit.app";
 
         const body: Record<string, unknown> = {
           chat_id: chatId,
