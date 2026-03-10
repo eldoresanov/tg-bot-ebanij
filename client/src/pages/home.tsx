@@ -363,7 +363,7 @@ export default function Home() {
                       <span className="relative flex items-center justify-center gap-2">
                         <Send className="w-3.5 h-3.5 shrink-0" style={{ color: "#00ff64" }} />
                         <span style={{ color: "#e0d0ff", textShadow: "0 0 10px rgba(160,100,255,0.6)" }}>
-                          {isPending ? "TRANSMITTING..." : "SEND"}
+                          {isPending ? "TRANSMITTING..." : "SEND — SYNC MODE"}
                         </span>
                       </span>
                     </Button>
