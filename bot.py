@@ -1,4 +1,4 @@
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes, MessageHandler, filters
 import os
 
@@ -20,7 +20,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     active_chats.add(chat_id)
 
-    keyboard = [[InlineKeyboardButton("Открыть мини-приложение", url=WEB_APP_URL)]]
+    keyboard = [[InlineKeyboardButton("Открыть мини-приложение", web_app=WebAppInfo(url=WEB_APP_URL))]]
     await update.message.reply_text(
         "Привет!\n\n"
         "Здесь ты можешь отправить анонимное сообщение в канал.\n\n"

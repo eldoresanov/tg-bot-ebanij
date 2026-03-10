@@ -343,7 +343,7 @@ export async function registerRoutes(
         if (webAppUrl) {
           body.reply_markup = JSON.stringify({
             inline_keyboard: [
-              [{ text: "Открыть мини-приложение", url: webAppUrl }],
+              [{ text: "Открыть мини-приложение", web_app: { url: webAppUrl } }],
             ],
           });
         }
