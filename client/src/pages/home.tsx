@@ -360,7 +360,7 @@ export default function Home() {
                       data-testid="button-send-normal"
                     >
                       <Send className="w-3.5 h-3.5 mr-2 opacity-70 shrink-0" />
-                      {isPending ? "TRANSMITTING..." : "SEND — СТАНДАРТНЫЙ РЕЖИМ"}
+                      {isPending ? "TRANSMITTING..." : "SEND"}
                     </Button>
 
                     <div className="relative py-1">
@@ -391,7 +391,7 @@ export default function Home() {
                       <div className="absolute inset-0 bg-purple-400/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                       <span className="relative flex items-center justify-center gap-2 flex-wrap">
                         <Zap className="w-3.5 h-3.5 shrink-0" style={{ color: "#00ff64" }} />
-                        {isPending ? "TRANSMITTING..." : "ПОСЛАТЬ НАХУЙ — БЕРСЕРК РЕЖИМ"}
+                        {isPending ? "TRANSMITTING..." : "SEND — BERSERK MODE"}
                       </span>
                     </Button>
                   </div>
