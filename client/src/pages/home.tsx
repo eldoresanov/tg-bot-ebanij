@@ -203,8 +203,18 @@ export default function Home() {
     e.target.value = "";
   };
 
+  const getTelegramUserId = (): number | undefined => {
+    try {
+      return (window as any)?.Telegram?.WebApp?.initDataUnsafe?.user?.id;
+    } catch {
+      return undefined;
+    }
+  };
+
   const handleSubmit = (isSwag: boolean) => {
     if (!hasContent) return;
+
+    const telegramUserId = getTelegramUserId();
 
     const onSuccess = () => {
       setContent("");
@@ -217,10 +227,11 @@ export default function Home() {
       const formData = new FormData();
       formData.append("content", content);
       formData.append("isSwag", String(isSwag));
+      if (telegramUserId) formData.append("telegramUserId", String(telegramUserId));
       formData.append("file", file);
       sendMedia(formData, { onSuccess });
     } else {
-      sendMessage({ content, isSwag }, { onSuccess });
+      sendMessage({ content, isSwag, ...(telegramUserId ? { telegramUserId } : {}) }, { onSuccess });
     }
   };
 

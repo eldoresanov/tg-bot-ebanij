@@ -10,6 +10,9 @@ const MAIN_CHANNEL_ID = "-1003181034907";
 const MOD_CHANNEL_ID = "-1003278302331";
 const ADMIN_ID = 6437612855;
 
+// Tracks when admin is composing a personal reply: adminId -> userTelegramId
+const pendingAdminReplies = new Map<number, number>();
+
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 50 * 1024 * 1024 }, // 50MB
@@ -24,13 +27,25 @@ function detectMediaType(mimetype: string): MediaType | null {
   return null;
 }
 
+function buildModerationKeyboard(msgId: number, telegramUserId?: number) {
+  const row = [
+    { text: "✅ Одобрить и отправить", callback_data: `web_approve_${msgId}` },
+    { text: "❌ Отклонить", callback_data: `web_reject_${msgId}` },
+  ];
+  if (telegramUserId) {
+    row.push({ text: "💬 Ответить лично", callback_data: `web_reply_${telegramUserId}_${msgId}` });
+  }
+  return { inline_keyboard: [row] };
+}
+
 async function sendMediaToModeration(
   fileBuffer: Buffer,
   filename: string,
   mimetype: string,
   mediaType: MediaType,
   caption: string,
-  msgId: number
+  msgId: number,
+  telegramUserId?: number
 ): Promise<string> {
   const tgMethod =
     mediaType === "photo"
@@ -45,19 +60,10 @@ async function sendMediaToModeration(
       ? "video"
       : "animation";
 
-  const replyMarkup = JSON.stringify({
-    inline_keyboard: [
-      [
-        { text: "✅ Одобрить и отправить", callback_data: `web_approve_${msgId}` },
-        { text: "❌ Отклонить", callback_data: `web_reject_${msgId}` },
-      ],
-    ],
-  });
-
   const form = new FormData();
   form.set("chat_id", MOD_CHANNEL_ID);
   form.set("caption", caption);
-  form.set("reply_markup", replyMarkup);
+  form.set("reply_markup", JSON.stringify(buildModerationKeyboard(msgId, telegramUserId)));
   form.set(fieldName, new Blob([fileBuffer], { type: mimetype }), filename);
 
   const resp = await fetch(
@@ -82,7 +88,7 @@ async function sendMediaToModeration(
   return fileId;
 }
 
-async function sendTextToModeration(text: string, msgId: number) {
+async function sendTextToModeration(text: string, msgId: number, telegramUserId?: number) {
   const response = await fetch(
     `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`,
     {
@@ -91,14 +97,7 @@ async function sendTextToModeration(text: string, msgId: number) {
       body: JSON.stringify({
         chat_id: MOD_CHANNEL_ID,
         text,
-        reply_markup: {
-          inline_keyboard: [
-            [
-              { text: "✅ Одобрить и отправить", callback_data: `web_approve_${msgId}` },
-              { text: "❌ Отклонить", callback_data: `web_reject_${msgId}` },
-            ],
-          ],
-        },
+        reply_markup: buildModerationKeyboard(msgId, telegramUserId),
       }),
     }
   );
@@ -209,13 +208,14 @@ export async function registerRoutes(
   app.post(api.messages.send.path, async (req, res) => {
     try {
       const input = api.messages.send.input.parse(req.body);
-      const msg = await storage.createMessage(input);
+      const { telegramUserId: tgUserId, ...msgData } = input as any;
+      const msg = await storage.createMessage(msgData);
 
       let caption = `⬡ NERV // АНОНИМ\n\n${input.content}`;
       if (input.isSwag) caption += "\nпошел нахуй @McTrakser";
 
       try {
-        await sendTextToModeration(caption, msg.id);
+        await sendTextToModeration(caption, msg.id, tgUserId);
       } catch (tgError) {
         console.error("Failed to forward to moderation.", tgError);
         return res.status(500).json({ message: "Не удалось отправить на модерацию" });
@@ -241,6 +241,7 @@ export async function registerRoutes(
       try {
         const content = (req.body.content as string) || "";
         const isSwag = req.body.isSwag === "true";
+        const tgUserId = req.body.telegramUserId ? parseInt(req.body.telegramUserId) : undefined;
         const file = req.file as Express.Multer.File | undefined;
 
         if (!file && !content.trim()) {
@@ -273,14 +274,15 @@ export async function registerRoutes(
               file.mimetype,
               mediaType,
               caption,
-              msg.id
+              msg.id,
+              tgUserId
             );
             // Update stored message with real file_id from Telegram
             if (fileId) {
               await storage.updateMessageFileId(msg.id, fileId);
             }
           } else {
-            await sendTextToModeration(caption, msg.id);
+            await sendTextToModeration(caption, msg.id, tgUserId);
           }
         } catch (tgError) {
           console.error("Failed to forward to moderation.", tgError);
@@ -299,6 +301,31 @@ export async function registerRoutes(
   app.post("/api/telegram/webhook", async (req, res) => {
     try {
       const update = req.body;
+
+      // Handle admin personal reply message
+      if (update?.message && update.message.chat?.id === ADMIN_ID && pendingAdminReplies.has(ADMIN_ID)) {
+        const targetUserId = pendingAdminReplies.get(ADMIN_ID)!;
+        pendingAdminReplies.delete(ADMIN_ID);
+        const replyText = update.message.text || update.message.caption || "";
+        try {
+          await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              chat_id: targetUserId,
+              text: `💬 Ответ модератора:\n\n${replyText}`,
+            }),
+          });
+          await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ chat_id: ADMIN_ID, text: "✅ Ответ отправлен анониму" }),
+          });
+        } catch (e) {
+          console.error("Failed to send personal reply:", e);
+        }
+        return res.sendStatus(200);
+      }
 
       // Handle /start command
       if (update?.message?.text?.startsWith("/start")) {
@@ -351,6 +378,27 @@ export async function registerRoutes(
             }),
           }
         );
+        return res.sendStatus(200);
+      }
+
+      // Handle "Reply personally" button
+      const replyMatch = data.match(/^web_reply_(\d+)_(\d+)$/);
+      if (replyMatch) {
+        const targetUserId = parseInt(replyMatch[1]);
+        pendingAdminReplies.set(ADMIN_ID, targetUserId);
+        await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/answerCallbackQuery`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ callback_query_id: callback_query.id }),
+        });
+        await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: ADMIN_ID,
+            text: "✏️ Напишите ответное сообщение — оно будет отправлено анониму лично:",
+          }),
+        });
         return res.sendStatus(200);
       }
 

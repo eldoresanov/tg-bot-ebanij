@@ -16,7 +16,7 @@ export const api = {
     send: {
       method: "POST" as const,
       path: "/api/messages" as const,
-      input: insertMessageSchema,
+      input: insertMessageSchema.extend({ telegramUserId: z.number().optional() }),
       responses: {
         201: z.custom<typeof messages.$inferSelect>(),
         400: errorSchemas.validation,
