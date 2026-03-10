@@ -353,13 +353,13 @@ export default function Home() {
                   <div className="flex flex-col gap-3 pt-1">
                     <Button
                       size="lg"
-                      className="w-full rounded-sm h-12 text-xs tracking-[0.25em] uppercase font-bold transition-all border border-purple-700/50 bg-purple-950/40 hover:bg-purple-900/50 hover:border-purple-600/70 text-purple-200/80"
+                      className="w-full rounded-sm min-h-12 h-auto py-3 text-xs tracking-tight sm:tracking-[0.2em] uppercase font-bold transition-all border border-purple-700/50 bg-purple-950/40 hover:bg-purple-900/50 hover:border-purple-600/70 text-purple-200/80 whitespace-normal text-center leading-tight"
                       style={{ fontFamily: "'Orbitron', sans-serif" }}
                       onClick={() => handleSubmit(false)}
                       disabled={isPending || !hasContent}
                       data-testid="button-send-normal"
                     >
-                      <Send className="w-3.5 h-3.5 mr-2 opacity-70" />
+                      <Send className="w-3.5 h-3.5 mr-2 opacity-70 shrink-0" />
                       {isPending ? "TRANSMITTING..." : "SEND — СТАНДАРТНЫЙ РЕЖИМ"}
                     </Button>
 
@@ -377,7 +377,7 @@ export default function Home() {
 
                     <Button
                       size="lg"
-                      className="w-full rounded-sm h-12 text-xs tracking-[0.2em] uppercase font-black transition-all relative overflow-hidden group border border-purple-500/60"
+                      className="w-full rounded-sm min-h-12 h-auto py-3 text-xs tracking-tight sm:tracking-[0.2em] uppercase font-black transition-all relative overflow-hidden group border border-purple-500/60 whitespace-normal text-center leading-tight"
                       style={{
                         fontFamily: "'Orbitron', sans-serif",
                         background: "linear-gradient(135deg, #2d0f6b 0%, #4a1482 100%)",
@@ -389,8 +389,8 @@ export default function Home() {
                       data-testid="button-send-swag"
                     >
                       <div className="absolute inset-0 bg-purple-400/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                      <span className="relative flex items-center justify-center gap-2">
-                        <Zap className="w-3.5 h-3.5" style={{ color: "#00ff64" }} />
+                      <span className="relative flex items-center justify-center gap-2 flex-wrap">
+                        <Zap className="w-3.5 h-3.5 shrink-0" style={{ color: "#00ff64" }} />
                         {isPending ? "TRANSMITTING..." : "ПОСЛАТЬ НАХУЙ — БЕРСЕРК РЕЖИМ"}
                       </span>
                     </Button>
