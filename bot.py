@@ -7,12 +7,12 @@ MAIN_CHANNEL_ID = "-1003181034907"
 MOD_CHANNEL_ID = "-1003278302331"
 ADMIN_ID = 6437612855
 
-# URL веб-приложения — замени на свой задеплоенный адрес
 WEB_APP_URL = os.environ.get("WEB_APP_URL", "https://telegram-bot-helper--McTrakser.replit.app")
 
 active_chats = set()
 pending_messages = {}
 mod_messages = {}
+pending_admin_replies = {}  # ADMIN_ID -> user_chat_id when admin is composing a reply
 
 
 # ===== /start =====
@@ -20,45 +20,47 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     active_chats.add(chat_id)
 
-    keyboard = [
-        [
-            InlineKeyboardButton(
-                "Открыть мини-приложение",
-                url=WEB_APP_URL
-            )
-        ]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-
+    keyboard = [[InlineKeyboardButton("Открыть мини-приложение", url=WEB_APP_URL)]]
     await update.message.reply_text(
         "Привет!\n\n"
         "Здесь ты можешь отправить анонимное сообщение в канал.\n\n"
         "Нажми кнопку ниже, чтобы открыть мини-приложение:",
-        reply_markup=reply_markup
+        reply_markup=InlineKeyboardMarkup(keyboard)
     )
 
 
-# ===== Пользовательское сообщение =====
+# ===== Входящее сообщение =====
 async def text_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat = update.effective_chat
+    msg = update.message
+
+    # Если это ответ администратора анониму
+    if chat.id == ADMIN_ID and ADMIN_ID in pending_admin_replies:
+        user_chat_id = pending_admin_replies.pop(ADMIN_ID)
+        try:
+            await context.bot.send_message(
+                chat_id=user_chat_id,
+                text=f"💬 Ответ модератора:\n\n{msg.text}"
+            )
+            await msg.reply_text("✅ Ответ отправлен анониму")
+        except Exception as e:
+            await msg.reply_text(f"❌ Не удалось отправить ответ: {e}")
+        return
+
+    # Обычное сообщение от пользователя
     if chat.type != "private" or chat.id not in active_chats:
         return
 
-    msg = update.message
     pending_messages[chat.id] = msg
 
-    keyboard = [
-        [
-            InlineKeyboardButton("Отправить спокойно", callback_data="send_normal"),
-            InlineKeyboardButton("Послать нахуй и отправить", callback_data="send_swag")
-        ]
-    ]
-    await msg.reply_text(
-        "Выберите вариант отправки:", reply_markup=InlineKeyboardMarkup(keyboard)
-    )
+    keyboard = [[
+        InlineKeyboardButton("Отправить спокойно", callback_data="send_normal"),
+        InlineKeyboardButton("Послать нахуй и отправить", callback_data="send_swag")
+    ]]
+    await msg.reply_text("Выберите вариант отправки:", reply_markup=InlineKeyboardMarkup(keyboard))
 
 
-# ===== Кнопки отправки анонимки =====
+# ===== Кнопки выбора варианта отправки =====
 async def send_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
@@ -73,12 +75,11 @@ async def send_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if query.data == "send_swag":
         text += "\nпошел нахуй @McTrakser"
 
-    keyboard_mod = [
-        [
-            InlineKeyboardButton("Одобрить и отправить", callback_data=f"approve_{chat_id}"),
-            InlineKeyboardButton("Отклонить", callback_data=f"reject_{chat_id}")
-        ]
-    ]
+    keyboard_mod = [[
+        InlineKeyboardButton("✅ Одобрить", callback_data=f"approve_{chat_id}"),
+        InlineKeyboardButton("❌ Отклонить", callback_data=f"reject_{chat_id}"),
+        InlineKeyboardButton("💬 Ответить лично", callback_data=f"reply_{chat_id}"),
+    ]]
 
     try:
         if msg.photo:
@@ -124,15 +125,15 @@ async def send_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
         print("Ошибка отправки в модерацию:", e)
 
 
-# ===== Модерация (админ) =====
+# ===== Кнопки модерации (одобрить/отклонить) =====
 async def moderation_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
-    await query.answer()
 
     if query.from_user.id != ADMIN_ID:
         await query.answer("Только админ может модерировать", show_alert=True)
         return
 
+    await query.answer()
     data = query.data
     parts = data.split("_")
     action = parts[0]
@@ -157,17 +158,36 @@ async def moderation_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE)
                 await context.bot.send_message(chat_id=MAIN_CHANNEL_ID, text=f"⬡ NERV // АНОНИМ\n{text}")
         except Exception as e:
             print("Ошибка отправки в основной канал:", e)
-        await query.edit_message_text("Сообщение одобрено и отправлено")
+        await query.edit_message_text("✅ Сообщение одобрено и отправлено")
     else:
-        await query.edit_message_text("Сообщение отклонено")
+        await query.edit_message_text("❌ Сообщение отклонено")
+
+
+# ===== Кнопка "Ответить лично" =====
+async def reply_button(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+
+    if query.from_user.id != ADMIN_ID:
+        await query.answer("Только админ может отвечать", show_alert=True)
+        return
+
+    await query.answer()
+    user_chat_id = int(query.data.split("_")[1])
+    pending_admin_replies[ADMIN_ID] = user_chat_id
+
+    await context.bot.send_message(
+        chat_id=ADMIN_ID,
+        text="✏️ Напишите ответное сообщение — оно будет отправлено анониму лично:"
+    )
 
 
 # ===== MAIN =====
 if __name__ == "__main__":
     app = ApplicationBuilder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
-    app.add_handler(MessageHandler(filters.ALL & ~filters.COMMAND, text_message))
-    app.add_handler(CallbackQueryHandler(send_buttons, pattern="send_.*"))
+    app.add_handler(CallbackQueryHandler(send_buttons, pattern="^send_"))
     app.add_handler(CallbackQueryHandler(moderation_buttons, pattern="^(approve|reject)_"))
+    app.add_handler(CallbackQueryHandler(reply_button, pattern="^reply_"))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, text_message))
     print("Бот запущен...")
     app.run_polling()
