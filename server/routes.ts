@@ -184,7 +184,9 @@ export async function registerRoutes(
   app: Express
 ): Promise<Server> {
   // Always register webhook to production URL so dev restarts don't override it
-  const PRODUCTION_WEBHOOK = "https://telegram-bot-helper--McTrakser.replit.app/api/telegram/webhook";
+  const PRODUCTION_WEBHOOK =
+    process.env.WEBHOOK_URL ||
+    "https://telegram-bot-helper--McTrakser.replit.app/api/telegram/webhook";
   registerTelegramWebhook(PRODUCTION_WEBHOOK);
 
   app.get("/api/telegram/setup-webhook", async (req, res) => {
