@@ -28,14 +28,16 @@ function detectMediaType(mimetype: string): MediaType | null {
 }
 
 function buildModerationKeyboard(msgId: number, telegramUserId?: number) {
-  const row = [
-    { text: "✅ Одобрить и отправить", callback_data: `web_approve_${msgId}` },
-    { text: "❌ Отклонить", callback_data: `web_reject_${msgId}` },
+  const rows: { text: string; callback_data: string }[][] = [
+    [
+      { text: "✅ Одобрить", callback_data: `web_approve_${msgId}` },
+      { text: "❌ Отклонить", callback_data: `web_reject_${msgId}` },
+    ],
   ];
   if (telegramUserId) {
-    row.push({ text: "💬 Ответить лично", callback_data: `web_reply_${telegramUserId}_${msgId}` });
+    rows.push([{ text: "💬 Ответить лично", callback_data: `web_reply_${telegramUserId}_${msgId}` }]);
   }
-  return { inline_keyboard: [row] };
+  return { inline_keyboard: rows };
 }
 
 async function sendMediaToModeration(
