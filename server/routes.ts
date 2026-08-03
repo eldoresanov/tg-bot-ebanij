@@ -27,15 +27,20 @@ function detectMediaType(mimetype: string): MediaType | null {
   return null;
 }
 
+const BOT_USERNAME = "PDrillUpBot";
+
 function buildModerationKeyboard(msgId: number, telegramUserId?: number) {
-  const rows: { text: string; callback_data: string }[][] = [
+  const rows: { text: string; callback_data?: string; url?: string }[][] = [
     [
       { text: "✅ Одобрить", callback_data: `web_approve_${msgId}` },
       { text: "❌ Отклонить", callback_data: `web_reject_${msgId}` },
     ],
   ];
   if (telegramUserId) {
-    rows.push([{ text: "💬 Ответить лично", callback_data: `web_reply_${telegramUserId}_${msgId}` }]);
+    rows.push([{
+      text: "💬 Ответить лично",
+      url: `https://t.me/${BOT_USERNAME}?start=reply_${telegramUserId}`,
+    }]);
   }
   return { inline_keyboard: rows };
 }
@@ -336,6 +341,24 @@ export async function registerRoutes(
       // Handle /start command
       if (update?.message?.text?.startsWith("/start")) {
         const chatId = update.message.chat.id;
+        const startParam = update.message.text.split(" ")[1] || "";
+
+        // Admin clicked "Reply personally" button → /start reply_USERID
+        const replyParamMatch = startParam.match(/^reply_(\d+)$/);
+        if (replyParamMatch && chatId === ADMIN_ID) {
+          const targetUserId = parseInt(replyParamMatch[1]);
+          pendingAdminReplies.set(ADMIN_ID, targetUserId);
+          await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              chat_id: ADMIN_ID,
+              text: "✏️ Напишите ответное сообщение — оно будет отправлено анониму лично:",
+            }),
+          });
+          return res.sendStatus(200);
+        }
+
         const webAppUrl =
           process.env.WEB_APP_URL ||
           "https://telegram-bot-helper--McTrakser.replit.app";
